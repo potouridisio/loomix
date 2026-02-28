@@ -11,9 +11,11 @@ import {
 } from "lucide-react";
 
 import { NavMain } from "@/components/nav-main";
+import { NavUser } from "@/components/nav-user";
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -25,6 +27,11 @@ export function AppSidebar() {
   const pathname = usePathname();
 
   const data = {
+    user: {
+      name: "Ioannis Potouridis",
+      email: "ioannis@loomix.io",
+      avatar: "/avatars/ioannis.jpg",
+    },
     navMain: [
       {
         title: "Home",
@@ -75,6 +82,9 @@ export function AppSidebar() {
       <SidebarContent>
         <NavMain items={data.navMain} />
       </SidebarContent>
+      <SidebarFooter>
+        <NavUser user={data.user} />
+      </SidebarFooter>
       <SidebarRail />
     </Sidebar>
   );
