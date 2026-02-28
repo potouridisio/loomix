@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { GamepadDirectional, Home } from "lucide-react";
+import { Compass, GamepadDirectional, Home } from "lucide-react";
 
 import { NavMain } from "@/components/nav-main";
 import {
@@ -25,6 +25,12 @@ export function AppSidebar() {
         url: "/",
         icon: Home,
         isActive: pathname === "/",
+      },
+      {
+        title: "Explore",
+        url: "/explore",
+        icon: Compass,
+        isActive: pathname === "/explore",
       },
     ],
   };
