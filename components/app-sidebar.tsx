@@ -2,7 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Compass, GamepadDirectional, Home, WandSparkles } from "lucide-react";
+import {
+  Compass,
+  GamepadDirectional,
+  Home,
+  Library,
+  WandSparkles,
+} from "lucide-react";
 
 import { NavMain } from "@/components/nav-main";
 import {
@@ -37,6 +43,12 @@ export function AppSidebar() {
         url: "/create",
         icon: WandSparkles,
         isActive: pathname === "/create",
+      },
+      {
+        title: "Library",
+        url: "/library",
+        icon: Library,
+        isActive: pathname === "/library",
       },
     ],
   };
