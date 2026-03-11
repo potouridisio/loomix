@@ -116,7 +116,7 @@ export function GamePreview({ isGenerating, gameGenerated, prompt }: GamePreview
             <div className="mx-auto mb-4 flex size-16 items-center justify-center rounded-full bg-primary/10">
               <Loader2 className="size-8 animate-spin text-primary" />
             </div>
-            <CardTitle>Generating Your Game</CardTitle>
+            <CardTitle className="shimmer-text">Generating Your Game</CardTitle>
             <CardDescription>
               Our AI is creating your game based on your description. This usually takes about 30-60
               seconds.
@@ -265,7 +265,7 @@ export function GamePreview({ isGenerating, gameGenerated, prompt }: GamePreview
             <div className="absolute inset-0 z-10 flex items-center justify-center bg-background/80 backdrop-blur-sm">
               <div className="text-center">
                 <Loader2 className="mx-auto mb-4 size-16 animate-spin text-primary/30" />
-                <p className="text-lg font-medium text-foreground">Refining Game</p>
+                <p className="text-lg font-medium text-foreground shimmer-text">Refining Game</p>
                 <p className="text-sm text-muted-foreground">Applying your changes...</p>
               </div>
             </div>
@@ -276,7 +276,7 @@ export function GamePreview({ isGenerating, gameGenerated, prompt }: GamePreview
             <div className="absolute inset-0 z-10 flex items-center justify-center bg-background/80 backdrop-blur-sm">
               <div className="text-center">
                 <Loader2 className="mx-auto mb-4 size-16 animate-spin text-primary/30" />
-                <p className="text-lg font-medium text-foreground">Regenerating Game</p>
+                <p className="text-lg font-medium text-foreground shimmer-text">Regenerating Game</p>
                 <p className="text-sm text-muted-foreground">Creating a new version...</p>
               </div>
             </div>
