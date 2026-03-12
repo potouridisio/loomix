@@ -65,11 +65,17 @@ export function AuthDialog() {
     setLoading(true);
 
     try {
+      closeDialog(); // Close dialog before OAuth redirect
       const { error: googleError } = await signInWithGoogle();
       if (googleError) {
         setError(googleError.message);
+        // Re-open dialog if there's an error
+        setTimeout(() => {
+          setLoading(false);
+        }, 500);
       }
-    } finally {
+    } catch (err) {
+      console.error("[v0] Google sign-in error:", err);
       setLoading(false);
     }
   };
