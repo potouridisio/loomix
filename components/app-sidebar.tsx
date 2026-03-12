@@ -45,7 +45,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { signOut, getCurrentUser } from "@/lib/auth";
-import { useAuthDialogStore } from "@/lib/stores/auth-store";
+import { useAuthDialogStore } from "@/stores/auth-store";
 import { cn } from "@/lib/utils";
 
 const mainNavItems = [

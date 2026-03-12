@@ -15,7 +15,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { signInWithEmail, signUpWithEmail, signInWithGoogle } from "@/lib/auth";
-import { useAuthDialogStore } from "@/lib/stores/auth-store";
+import { useAuthDialogStore } from "@/stores/auth-store";
 
 export function AuthDialog() {
   const router = useRouter();
