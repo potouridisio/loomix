@@ -63,7 +63,9 @@ function Textarea(
 
   React.useImperativeHandle(ref, () => hiddenTextareaRef.current as HTMLTextAreaElement);
 
-  const minHeight = rows * 1.5;
+  const lineHeightRem = 1.5;
+  const minHeight = rows * lineHeightRem;
+  const maxHeight = rows * lineHeightRem + 0.5; // +0.5 for padding
 
   return (
     <>
@@ -77,6 +79,7 @@ function Textarea(
         {...props}
       />
       <ScrollArea
+        style={{ minHeight: `${minHeight}rem`, maxHeight: `${maxHeight * 3}rem` }}
         className={cn(
           "w-full rounded-md border border-input bg-transparent transition-colors focus-within:border-ring aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:bg-input/30 dark:aria-invalid:ring-destructive/40",
           className,
@@ -96,7 +99,7 @@ function Textarea(
             onKeyDown={onKeyDown}
             style={{ minHeight: `${minHeight}rem` }}
             className={cn(
-              "w-full whitespace-pre-wrap wrap-break-word bg-transparent px-3 py-2 text-sm outline-none",
+              "w-full whitespace-pre-wrap break-words bg-transparent px-3 py-2 text-sm outline-none",
               disabled && "cursor-not-allowed opacity-50",
             )}
           />
