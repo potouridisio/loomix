@@ -53,15 +53,25 @@ export async function signInWithGoogle() {
   return { data, error };
 }
 
-export async function updateUserProfile(displayName: string, username: string) {
+export async function updateUserProfile(displayName: string) {
   const { data, error } = await supabase.auth.updateUser({
     data: {
       name: displayName,
-      username,
     },
   });
 
   return { data, error };
+}
+
+export async function deleteAccount() {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: new Error("Not authenticated") };
+
+  const { error } = await supabase.rpc("delete_user");
+  if (error) return { error };
+
+  await supabase.auth.signOut();
+  return { error: null };
 }
 
 export async function updateUserEmail(email: string) {

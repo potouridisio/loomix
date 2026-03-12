@@ -28,7 +28,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { getCurrentUser, updateUserProfile, updateUserEmail } from "@/lib/auth";
+import { getCurrentUser, updateUserProfile, updateUserEmail, deleteAccount } from "@/lib/auth";
 
 export default function AccountPage() {
   const router = useRouter();
@@ -39,9 +39,9 @@ export default function AccountPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [profile, setProfile] = useState({
     displayName: "",
-    username: "",
     email: "",
   });
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     const loadUser = async () => {
@@ -54,7 +54,6 @@ export default function AccountPage() {
 
         setProfile({
           displayName: user.user_metadata?.name || user.email?.split("@")[0] || "",
-          username: user.user_metadata?.username || "",
           email: user.email || "",
         });
       } catch {
@@ -84,23 +83,37 @@ export default function AccountPage() {
     setError(null);
 
     try {
-      const { error: profileError } = await updateUserProfile(profile.displayName, profile.username);
+      const { error: profileError } = await updateUserProfile(profile.displayName);
       if (profileError) {
         setError(profileError.message);
-        setIsSaving(false);
         return;
       }
 
       const { error: emailError } = await updateUserEmail(profile.email);
       if (emailError) {
         setError(emailError.message);
-        setIsSaving(false);
         return;
       }
     } catch {
       setError("Failed to save changes");
     } finally {
       setIsSaving(false);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    setIsDeleting(true);
+    try {
+      const { error } = await deleteAccount();
+      if (error) {
+        setError(error.message);
+        setIsDeleting(false);
+        return;
+      }
+      router.push("/");
+    } catch {
+      setError("Failed to delete account");
+      setIsDeleting(false);
     }
   };
 
@@ -160,30 +173,18 @@ export default function AccountPage() {
                 </div>
                 <div>
                   <p className="font-medium">{profile.displayName || "User"}</p>
-                  <p className="text-sm text-muted-foreground">
-                    @{profile.username || "username"}
-                  </p>
+                  <p className="text-sm text-muted-foreground">{profile.email}</p>
                 </div>
               </div>
 
               {/* Form Fields */}
-              <div className="grid gap-4 sm:grid-cols-2">
-                <div className="space-y-2">
-                  <Label htmlFor="displayName">Display Name</Label>
-                  <Input
-                    id="displayName"
-                    value={profile.displayName}
-                    onChange={(e) => setProfile({ ...profile, displayName: e.target.value })}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="username">Username</Label>
-                  <Input
-                    id="username"
-                    value={profile.username}
-                    onChange={(e) => setProfile({ ...profile, username: e.target.value })}
-                  />
-                </div>
+              <div className="space-y-2">
+                <Label htmlFor="displayName">Display Name</Label>
+                <Input
+                  id="displayName"
+                  value={profile.displayName}
+                  onChange={(e) => setProfile({ ...profile, displayName: e.target.value })}
+                />
               </div>
 
               <div className="space-y-2">
@@ -232,8 +233,12 @@ export default function AccountPage() {
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                       <AlertDialogCancel>Cancel</AlertDialogCancel>
-                      <AlertDialogAction className="bg-destructive text-white hover:bg-destructive/90">
-                        Delete Account
+                      <AlertDialogAction
+                        className="bg-destructive text-white hover:bg-destructive/90"
+                        onClick={handleDeleteAccount}
+                        disabled={isDeleting}
+                      >
+                        {isDeleting ? "Deleting..." : "Delete Account"}
                       </AlertDialogAction>
                     </AlertDialogFooter>
                   </AlertDialogContent>
