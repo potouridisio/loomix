@@ -77,7 +77,7 @@ function Textarea({
           onKeyDown={onKeyDown}
           style={{ minHeight: `${minHeight}rem` }}
           className={cn(
-            "w-full whitespace-pre-wrap break-words bg-transparent px-3 py-2 text-sm outline-none",
+            "w-full whitespace-pre-wrap wrap-break-word bg-transparent px-3 py-2 text-sm outline-none",
             disabled && "cursor-not-allowed opacity-50",
           )}
         />
