@@ -39,7 +39,8 @@ export async function updateSession(request: NextRequest) {
 
   const user = data?.claims;
 
-  const protectedRoutes = ["/create", "/library", "/account", "/billing"];
+  // const protectedRoutes = ["/create", "/library", "/account", "/billing"];
+  const protectedRoutes = [];
 
   const isProtectedRoute = protectedRoutes.some((route) =>
     request.nextUrl.pathname.startsWith(route),
