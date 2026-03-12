@@ -8,7 +8,7 @@ import {
   Download,
   Gamepad2,
   Globe,
-  GlobeLock,
+  GlobeOff,
   Sparkles,
   Loader2,
   MoreHorizontal,
@@ -195,7 +195,7 @@ export function GamePreview({ isGenerating, gameGenerated, prompt, isPublished =
             </Button>
             <Button variant="ghost" size="sm" className="hidden gap-2 sm:inline-flex" onClick={handlePublish}>
               {isPublished ? (
-                <GlobeLock className="size-4" />
+                <GlobeOff className="size-4" />
               ) : (
                 <Globe className="size-4" />
               )}
@@ -258,7 +258,7 @@ export function GamePreview({ isGenerating, gameGenerated, prompt, isPublished =
                 </DropdownMenuItem>
                 <DropdownMenuItem onSelect={handlePublish}>
                   {isPublished ? (
-                    <GlobeLock className="size-4" />
+                    <GlobeOff className="size-4" />
                   ) : (
                     <Globe className="size-4" />
                   )}
