@@ -145,30 +145,3 @@
     opacity: 0;
   }
 }
-
-@keyframes shimmer {
-  0% {
-    background-position: 200% center;
-  }
-  100% {
-    background-position: -200% center;
-  }
-}
-
-.shimmer-text {
-  --shimmer-muted: #8b8b8b;
-  --shimmer-highlight: #fafafa;
-  background: linear-gradient(
-    90deg,
-    var(--shimmer-muted) 0%,
-    var(--shimmer-muted) 40%,
-    var(--shimmer-highlight) 50%,
-    var(--shimmer-muted) 60%,
-    var(--shimmer-muted) 100%
-  );
-  background-size: 200% 100%;
-  background-clip: text;
-  -webkit-background-clip: text;
-  color: transparent;
-  animation: shimmer 2s ease-in-out infinite;
-}
