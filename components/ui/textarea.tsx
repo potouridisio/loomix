@@ -104,7 +104,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
             className,
           )}
         >
-          <div className="relative min-h-full">
+          <div className="relative">
             {isEmpty && placeholder && (
               <span
                 aria-hidden
@@ -126,7 +126,6 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
               autoFocus={autoFocus}
               onInput={handleInput}
               onKeyDown={onKeyDown}
-              style={{ minHeight: `${heightRem}rem` }}
               className="w-full whitespace-pre-wrap break-words bg-transparent px-3 py-2 text-sm outline-none"
             />
           </div>
