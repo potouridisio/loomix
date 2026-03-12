@@ -7,6 +7,7 @@ import {
   Eye,
   Gamepad2,
   Globe,
+  GlobeOff,
   MoreVertical,
   Play,
   Share2,
@@ -172,7 +173,11 @@ export function LibraryGameCard({
                   </Badge>
                 </DropdownMenuItem>
                 <DropdownMenuItem onSelect={handlePublish}>
-                  <Globe className="size-4" />
+                  {game.status === "published" ? (
+                    <GlobeOff className="size-4" />
+                  ) : (
+                    <Globe className="size-4" />
+                  )}
                   {game.status === "published" ? "Unpublish" : "Publish"}
                 </DropdownMenuItem>
                 <DropdownMenuItem onSelect={handleShare}>
@@ -284,7 +289,11 @@ export function LibraryGameCard({
                 </Badge>
               </DropdownMenuItem>
               <DropdownMenuItem onSelect={handlePublish}>
-                <Globe className="size-4" />
+                {game.status === "published" ? (
+                  <GlobeOff className="size-4" />
+                ) : (
+                  <Globe className="size-4" />
+                )}
                 {game.status === "published" ? "Unpublish" : "Publish"}
               </DropdownMenuItem>
               <DropdownMenuItem onSelect={handleShare}>

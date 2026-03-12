@@ -3,6 +3,7 @@ import {
   Clapperboard,
   Download,
   Globe,
+  GlobeOff,
   MoreHorizontal,
   Share2,
   Star,
@@ -170,7 +171,11 @@ export default async function PlayPage({ params }: PlayPageProps) {
             </Badge>
           </Button>
           <Button variant="outline" size="sm" className="hidden gap-2 md:inline-flex">
-            <Globe className="size-4" />
+            {game.status === "published" ? (
+              <GlobeOff className="size-4" />
+            ) : (
+              <Globe className="size-4" />
+            )}
             {game.status === "published" ? "Unpublish" : "Publish"}
           </Button>
           <ShareButton
@@ -219,7 +224,11 @@ export default async function PlayPage({ params }: PlayPageProps) {
                 </Badge>
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <Globe className="size-4" />
+                {game.status === "published" ? (
+                  <GlobeOff className="size-4" />
+                ) : (
+                  <Globe className="size-4" />
+                )}
                 {game.status === "published" ? "Unpublish" : "Publish"}
               </DropdownMenuItem>
               <DropdownMenuItem>

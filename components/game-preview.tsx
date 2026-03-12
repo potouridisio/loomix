@@ -8,6 +8,7 @@ import {
   Download,
   Gamepad2,
   Globe,
+  GlobeOff,
   Sparkles,
   Loader2,
   MoreHorizontal,
@@ -193,7 +194,11 @@ export function GamePreview({ isGenerating, gameGenerated, prompt, isPublished =
               </Badge>
             </Button>
             <Button variant="ghost" size="sm" className="hidden gap-2 sm:inline-flex" onClick={handlePublish}>
-              <Globe className="size-4" />
+              {isPublished ? (
+                <GlobeOff className="size-4" />
+              ) : (
+                <Globe className="size-4" />
+              )}
               {isPublished ? "Unpublish" : "Publish"}
             </Button>
             <ShareButton
@@ -252,7 +257,11 @@ export function GamePreview({ isGenerating, gameGenerated, prompt, isPublished =
                   </Badge>
                 </DropdownMenuItem>
                 <DropdownMenuItem onSelect={handlePublish}>
-                  <Globe className="size-4" />
+                  {isPublished ? (
+                    <GlobeOff className="size-4" />
+                  ) : (
+                    <Globe className="size-4" />
+                  )}
                   {isPublished ? "Unpublish" : "Publish"}
                 </DropdownMenuItem>
                 <DropdownMenuItem>
