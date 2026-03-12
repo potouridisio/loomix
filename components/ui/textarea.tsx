@@ -106,4 +106,6 @@ function Textarea(
   );
 }
 
-export { Textarea: React.forwardRef(Textarea) as React.ForwardRefExoticComponent<TextareaProps & React.RefAttributes<HTMLTextAreaElement>> };
+const ForwardedTextarea = React.forwardRef(Textarea);
+
+export { ForwardedTextarea as Textarea };
