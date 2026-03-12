@@ -52,3 +52,22 @@ export async function signInWithGoogle() {
 
   return { data, error };
 }
+
+export async function updateUserProfile(displayName: string, username: string) {
+  const { data, error } = await supabase.auth.updateUser({
+    data: {
+      name: displayName,
+      username,
+    },
+  });
+
+  return { data, error };
+}
+
+export async function updateUserEmail(email: string) {
+  const { data, error } = await supabase.auth.updateUser({
+    email,
+  });
+
+  return { data, error };
+}
