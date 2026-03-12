@@ -7,9 +7,11 @@ import { cookies } from "next/headers";
 import "./globals.css";
 import { AppSidebar } from "@/components/app-sidebar";
 import { AuthDialog } from "@/components/auth-dialog";
+import { AuthProvider } from "@/components/auth-provider";
 import { MobileHeader } from "@/components/mobile-header";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
+import { createClient } from "@/lib/supabase/server";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -40,19 +42,24 @@ export default async function RootLayout({
   const sidebarState = cookieStore.get("sidebar_state")?.value;
   const defaultOpen = sidebarState !== "false";
 
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
   return (
     <html lang="en" className="dark">
       <body className={`${inter.variable} ${geistMono.variable}  font-mono antialiased`}>
-        <SidebarProvider defaultOpen={defaultOpen}>
-          <AppSidebar />
-          <SidebarInset>
-            <MobileHeader />
-            <ScrollArea className="h-dvh">
-              <div className="min-h-full">{children}</div>
-            </ScrollArea>
-          </SidebarInset>
-        </SidebarProvider>
-        <AuthDialog />
+        <AuthProvider user={user}>
+          <SidebarProvider defaultOpen={defaultOpen}>
+            <AppSidebar />
+            <SidebarInset>
+              <MobileHeader />
+              <ScrollArea className="h-dvh">
+                <div className="min-h-full">{children}</div>
+              </ScrollArea>
+            </SidebarInset>
+          </SidebarProvider>
+          <AuthDialog />
+        </AuthProvider>
         <Analytics />
       </body>
     </html>

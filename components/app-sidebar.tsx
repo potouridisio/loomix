@@ -44,9 +44,8 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { useAuthDialog } from "@/lib/auth-store";
+import { useAuthStore, getUserDisplayInfo } from "@/lib/auth-store";
 import { createClient } from "@/lib/supabase/client";
-import { useUser } from "@/lib/use-user";
 import { cn } from "@/lib/utils";
 
 const mainNavItems = [
@@ -67,8 +66,9 @@ export function AppSidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const supabase = createClient();
-  const { isLoggedIn, userDisplayInfo, mutate } = useUser();
-  const { setShowAuthDialog, setAuthMode, setRedirectTo } = useAuthDialog();
+  const { user, setUser, setShowAuthDialog, setAuthMode, setRedirectTo } = useAuthStore();
+  const userDisplayInfo = getUserDisplayInfo(user);
+  const isLoggedIn = !!user;
   const { toggleSidebar, state } = useSidebar();
   const isCollapsed = state === "collapsed";
   const [isOpen, setOpen] = useState(false);
@@ -84,7 +84,7 @@ export function AppSidebar() {
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    await mutate(null, false);
+    setUser(null);
     router.push("/");
   };
 

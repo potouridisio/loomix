@@ -14,15 +14,13 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useAuthDialog } from "@/lib/auth-store";
+import { useAuthStore } from "@/lib/auth-store";
 import { createClient } from "@/lib/supabase/client";
-import { useUser } from "@/lib/use-user";
 
 export function AuthDialog() {
   const router = useRouter();
   const supabase = createClient();
-  const { mutate } = useUser();
-  const { showAuthDialog, setShowAuthDialog, authMode, setAuthMode, redirectTo, setRedirectTo } = useAuthDialog();
+  const { showAuthDialog, setShowAuthDialog, authMode, setAuthMode, redirectTo, setRedirectTo } = useAuthStore();
   
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -54,13 +52,13 @@ export function AuthDialog() {
         if (error) {
           setError(error.message);
         } else {
-          await mutate();
           setShowAuthDialog(false);
           resetForm();
           if (redirectTo) {
             router.push(redirectTo);
             setRedirectTo(null);
           }
+          router.refresh();
         }
       } else {
         const { error, data } = await supabase.auth.signUp({
@@ -80,13 +78,13 @@ export function AuthDialog() {
         } else if (data.user && !data.session) {
           setShowConfirmation(true);
         } else {
-          await mutate();
           setShowAuthDialog(false);
           resetForm();
           if (redirectTo) {
             router.push(redirectTo);
             setRedirectTo(null);
           }
+          router.refresh();
         }
       }
     } finally {
