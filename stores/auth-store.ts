@@ -14,9 +14,24 @@ export const useAuthDialogStore = create<AuthDialogStore>((set) => ({
   isOpen: false,
   mode: "login",
   redirectTo: null,
-  openDialog: (mode = "login", redirectTo = null) =>
-    set({ isOpen: true, mode, redirectTo }),
-  closeDialog: () => set({ isOpen: false, redirectTo: null }),
+  openDialog: (mode = "login", redirectTo = null) => {
+    if (redirectTo && typeof window !== "undefined") {
+      sessionStorage.setItem("auth_redirect", redirectTo);
+    }
+    return set({ isOpen: true, mode, redirectTo });
+  },
+  closeDialog: () => {
+    if (typeof window !== "undefined") {
+      sessionStorage.removeItem("auth_redirect");
+    }
+    return set({ isOpen: false, redirectTo: null });
+  },
   setMode: (mode) => set({ mode }),
-  setRedirectTo: (redirectTo) => set({ redirectTo }),
+  setRedirectTo: (redirectTo) => {
+    if (redirectTo && typeof window !== "undefined") {
+      sessionStorage.setItem("auth_redirect", redirectTo);
+    }
+    return set({ redirectTo });
+  },
 }));
+

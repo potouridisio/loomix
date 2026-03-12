@@ -65,6 +65,11 @@ export function AuthDialog() {
     setLoading(true);
 
     try {
+      // Store redirect before OAuth redirect
+      if (redirectTo && typeof window !== "undefined") {
+        sessionStorage.setItem("auth_redirect", redirectTo);
+      }
+
       const { data, error: googleError } = await signInWithGoogle();
       
       if (googleError) {

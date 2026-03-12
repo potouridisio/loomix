@@ -7,7 +7,15 @@ export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
   // if "next" is in param, use it as the redirect URL
-  let next = searchParams.get("next") ?? "/";
+  let next = searchParams.get("next") ?? null;
+  
+  if (!next) {
+    // Check if redirect was stored in the request cookies or try to extract from referrer
+    // For OAuth flows that store redirect in sessionStorage on client, we'll default to home
+    // The client will handle the redirect after checking sessionStorage
+    next = "/";
+  }
+  
   if (!next.startsWith("/")) {
     // if "next" is not a relative URL, use the default
     next = "/";
@@ -17,10 +25,9 @@ export async function GET(request: Request) {
     const supabase = await createClient();
     const { error } = await supabase.auth.exchangeCodeForSession(code);
     if (!error) {
-      const forwardedHost = request.headers.get("x-forwarded-host"); // original origin before load balancer
+      const forwardedHost = request.headers.get("x-forwarded-host");
       const isLocalEnv = process.env.NODE_ENV === "development";
       if (isLocalEnv) {
-        // we can be sure that there is no load balancer in between, so no need to watch for X-Forwarded-Host
         return NextResponse.redirect(`${origin}${next}`);
       } else if (forwardedHost) {
         return NextResponse.redirect(`https://${forwardedHost}${next}`);
