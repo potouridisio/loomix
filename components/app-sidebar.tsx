@@ -15,7 +15,7 @@ import {
   SidebarIcon,
 } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { Logo } from "@/components/logo";
@@ -44,7 +44,9 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { useAuth } from "@/lib/auth-context";
+import { useAuthDialog } from "@/lib/auth-store";
+import { createClient } from "@/lib/supabase/client";
+import { useUser } from "@/lib/use-user";
 import { cn } from "@/lib/utils";
 
 const mainNavItems = [
@@ -63,7 +65,10 @@ const mainNavItems = [
 
 export function AppSidebar() {
   const pathname = usePathname();
-  const { isLoggedIn, userDisplayInfo, logout, setShowAuthDialog, setAuthMode, setRedirectTo } = useAuth();
+  const router = useRouter();
+  const supabase = createClient();
+  const { isLoggedIn, userDisplayInfo, mutate } = useUser();
+  const { setShowAuthDialog, setAuthMode, setRedirectTo } = useAuthDialog();
   const { toggleSidebar, state } = useSidebar();
   const isCollapsed = state === "collapsed";
   const [isOpen, setOpen] = useState(false);
@@ -75,6 +80,12 @@ export function AppSidebar() {
       setAuthMode("login");
       setShowAuthDialog(true);
     }
+  };
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    await mutate(null, false);
+    router.push("/");
   };
 
   return (
@@ -212,7 +223,7 @@ export function AppSidebar() {
                     <Avatar className="size-8 rounded-lg">
                       <AvatarImage src="/placeholder-user.jpg" alt="User" />
                       <AvatarFallback className="rounded-lg bg-accent text-accent-foreground">
-                        {userDisplayInfo?.initials || "JD"}
+                        {userDisplayInfo?.initials || "U"}
                       </AvatarFallback>
                     </Avatar>
                     <div className="grid flex-1 text-left text-sm leading-tight">
@@ -241,7 +252,7 @@ export function AppSidebar() {
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem className="text-muted-foreground" onSelect={logout}>
+                  <DropdownMenuItem className="text-muted-foreground" onSelect={handleLogout}>
                     <LogOut className="size-4" />
                     Log out
                   </DropdownMenuItem>

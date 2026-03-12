@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { Logo } from "@/components/logo";
@@ -13,10 +14,16 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useAuth } from "@/lib/auth-context";
+import { useAuthDialog } from "@/lib/auth-store";
+import { createClient } from "@/lib/supabase/client";
+import { useUser } from "@/lib/use-user";
 
 export function AuthDialog() {
-  const { showAuthDialog, setShowAuthDialog, authMode, setAuthMode, login, signup, loginWithGoogle } = useAuth();
+  const router = useRouter();
+  const supabase = createClient();
+  const { mutate } = useUser();
+  const { showAuthDialog, setShowAuthDialog, authMode, setAuthMode, redirectTo, setRedirectTo } = useAuthDialog();
+  
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -39,20 +46,47 @@ export function AuthDialog() {
 
     try {
       if (authMode === "login") {
-        const result = await login(email, password);
-        if (result.error) {
-          setError(result.error);
+        const { error } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+
+        if (error) {
+          setError(error.message);
         } else {
+          await mutate();
+          setShowAuthDialog(false);
           resetForm();
+          if (redirectTo) {
+            router.push(redirectTo);
+            setRedirectTo(null);
+          }
         }
       } else {
-        const result = await signup(name, email, password);
-        if (result.error) {
-          setError(result.error);
-        } else if (result.needsConfirmation) {
+        const { error, data } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            emailRedirectTo: process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL || 
+              `${window.location.origin}/`,
+            data: {
+              full_name: name,
+            },
+          },
+        });
+
+        if (error) {
+          setError(error.message);
+        } else if (data.user && !data.session) {
           setShowConfirmation(true);
         } else {
+          await mutate();
+          setShowAuthDialog(false);
           resetForm();
+          if (redirectTo) {
+            router.push(redirectTo);
+            setRedirectTo(null);
+          }
         }
       }
     } finally {
@@ -62,7 +96,12 @@ export function AuthDialog() {
 
   const handleGoogleLogin = async () => {
     setError(null);
-    await loginWithGoogle();
+    await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+      },
+    });
   };
 
   const handleOpenChange = (open: boolean) => {
