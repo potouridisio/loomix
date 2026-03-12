@@ -237,17 +237,9 @@ export function GamePreview({ isGenerating, gameGenerated, prompt, isPublished =
                 <TooltipContent side="bottom">More</TooltipContent>
               </Tooltip>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem
-                  disabled={isPublished}
-                  onSelect={!isPublished ? handlePublish : undefined}
-                >
+                <DropdownMenuItem onSelect={handlePublish}>
                   <Globe className="size-4" />
-                  Publish
-                  {isPublished && (
-                    <Badge variant="secondary" className="ml-auto px-1.5 py-0 text-[10px]">
-                      Published
-                    </Badge>
-                  )}
+                  {isPublished ? "Unpublish" : "Publish"}
                 </DropdownMenuItem>
                 <DropdownMenuItem disabled>
                   <Download className="size-4" />

@@ -171,17 +171,9 @@ export function LibraryGameCard({
                     Soon
                   </Badge>
                 </DropdownMenuItem>
-                <DropdownMenuItem
-                  disabled={game.status === "published"}
-                  onSelect={game.status !== "published" ? handlePublish : undefined}
-                >
+                <DropdownMenuItem onSelect={handlePublish}>
                   <Globe className="size-4" />
-                  Publish
-                  {game.status === "published" && (
-                    <Badge variant="secondary" className="ml-1 px-1.5 py-0 text-[10px]">
-                      Published
-                    </Badge>
-                  )}
+                  {game.status === "published" ? "Unpublish" : "Publish"}
                 </DropdownMenuItem>
                 <DropdownMenuItem onSelect={handleShare}>
                   <Share2 className="size-4" />
@@ -291,17 +283,9 @@ export function LibraryGameCard({
                   Soon
                 </Badge>
               </DropdownMenuItem>
-              <DropdownMenuItem
-                disabled={game.status === "published"}
-                onSelect={game.status !== "published" ? handlePublish : undefined}
-              >
+              <DropdownMenuItem onSelect={handlePublish}>
                 <Globe className="size-4" />
-                Publish
-                {game.status === "published" && (
-                  <Badge variant="secondary" className="ml-1 px-1.5 py-0 text-[10px]">
-                    Published
-                  </Badge>
-                )}
+                {game.status === "published" ? "Unpublish" : "Publish"}
               </DropdownMenuItem>
               <DropdownMenuItem onSelect={handleShare}>
                 <Share2 className="size-4" />
