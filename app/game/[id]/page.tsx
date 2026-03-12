@@ -3,7 +3,7 @@ import {
   Clapperboard,
   Download,
   Globe,
-  GlobeOff,
+  GlobeLock,
   MoreHorizontal,
   Share2,
   Star,
@@ -172,7 +172,7 @@ export default async function PlayPage({ params }: PlayPageProps) {
           </Button>
           <Button variant="outline" size="sm" className="hidden gap-2 md:inline-flex">
             {game.status === "published" ? (
-              <GlobeOff className="size-4" />
+              <GlobeLock className="size-4" />
             ) : (
               <Globe className="size-4" />
             )}
@@ -225,7 +225,7 @@ export default async function PlayPage({ params }: PlayPageProps) {
               </DropdownMenuItem>
               <DropdownMenuItem>
                 {game.status === "published" ? (
-                  <GlobeOff className="size-4" />
+                  <GlobeLock className="size-4" />
                 ) : (
                   <Globe className="size-4" />
                 )}

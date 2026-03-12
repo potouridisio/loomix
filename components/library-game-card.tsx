@@ -7,7 +7,7 @@ import {
   Eye,
   Gamepad2,
   Globe,
-  GlobeOff,
+  GlobeLock,
   MoreVertical,
   Play,
   Share2,
@@ -174,7 +174,7 @@ export function LibraryGameCard({
                 </DropdownMenuItem>
                 <DropdownMenuItem onSelect={handlePublish}>
                   {game.status === "published" ? (
-                    <GlobeOff className="size-4" />
+                    <GlobeLock className="size-4" />
                   ) : (
                     <Globe className="size-4" />
                   )}
@@ -290,7 +290,7 @@ export function LibraryGameCard({
               </DropdownMenuItem>
               <DropdownMenuItem onSelect={handlePublish}>
                 {game.status === "published" ? (
-                  <GlobeOff className="size-4" />
+                  <GlobeLock className="size-4" />
                 ) : (
                   <Globe className="size-4" />
                 )}
