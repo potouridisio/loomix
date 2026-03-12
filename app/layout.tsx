@@ -7,7 +7,7 @@ import { cookies } from "next/headers";
 import "./globals.css";
 import { AppSidebar } from "@/components/app-sidebar";
 import { AuthDialog } from "@/components/auth-dialog";
-import { AuthCallbackHandler } from "@/components/auth-callback-handler";
+
 import { MobileHeader } from "@/components/mobile-header";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
@@ -54,7 +54,6 @@ export default async function RootLayout({
           </SidebarInset>
         </SidebarProvider>
         <AuthDialog />
-        <AuthCallbackHandler />
         <Analytics />
       </body>
     </html>

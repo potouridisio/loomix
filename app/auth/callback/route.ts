@@ -1,23 +1,20 @@
+import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
-// The client you created from the Server-Side Auth instructions
 import { createClient } from "@/lib/supabase/server";
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
-  // if "next" is in param, use it as the redirect URL
-  let next = searchParams.get("next") ?? null;
   
-  if (!next) {
-    // Check if redirect was stored in the request cookies or try to extract from referrer
-    // For OAuth flows that store redirect in sessionStorage on client, we'll default to home
-    // The client will handle the redirect after checking sessionStorage
-    next = "/";
+  // Read redirect from cookie
+  const cookieStore = await cookies();
+  let next = cookieStore.get("auth_redirect")?.value;
+  if (next) {
+    next = decodeURIComponent(next);
   }
   
-  if (!next.startsWith("/")) {
-    // if "next" is not a relative URL, use the default
+  if (!next || !next.startsWith("/")) {
     next = "/";
   }
 
@@ -27,16 +24,18 @@ export async function GET(request: Request) {
     if (!error) {
       const forwardedHost = request.headers.get("x-forwarded-host");
       const isLocalEnv = process.env.NODE_ENV === "development";
-      if (isLocalEnv) {
-        return NextResponse.redirect(`${origin}${next}`);
-      } else if (forwardedHost) {
-        return NextResponse.redirect(`https://${forwardedHost}${next}`);
-      } else {
-        return NextResponse.redirect(`${origin}${next}`);
-      }
+      
+      // Clear the redirect cookie
+      const response = isLocalEnv
+        ? NextResponse.redirect(`${origin}${next}`)
+        : forwardedHost
+          ? NextResponse.redirect(`https://${forwardedHost}${next}`)
+          : NextResponse.redirect(`${origin}${next}`);
+      
+      response.cookies.set("auth_redirect", "", { maxAge: 0, path: "/" });
+      return response;
     }
   }
 
-  // return the user to an error page with instructions
   return NextResponse.redirect(`${origin}/auth/auth-code-error`);
 }

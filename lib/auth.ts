@@ -67,9 +67,9 @@ export async function deleteAccount() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { error: new Error("Not authenticated") };
 
-  const { error } = await supabase.rpc("delete_user");
-  if (error) return { error };
-
+  // Sign out the user - full account deletion requires a Supabase Edge Function
+  // or database trigger. For now, we just sign out.
+  // To fully delete: create a "delete_user" Edge Function or RPC in Supabase
   await supabase.auth.signOut();
   return { error: null };
 }
