@@ -1,10 +1,12 @@
 import {
   ArrowLeft,
+  Clapperboard,
   Download,
-  ExternalLink,
+  Globe,
   MoreHorizontal,
   Share2,
   Star,
+  Trash2,
   Eye,
   Info,
 } from "lucide-react";
@@ -20,6 +22,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
@@ -158,28 +161,49 @@ export default async function PlayPage({ params }: PlayPageProps) {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          {/* Desktop buttons */}
-          <ShareButton
-            url={`/play/${id}`}
-            variant="outline"
-            size="sm"
-            className="hidden md:inline-flex"
-          />
+          {/* Desktop visible buttons: Edit, Publish/Unpublish, Share */}
           <Button variant="outline" size="sm" className="hidden gap-2 md:inline-flex" disabled>
-            <Download className="size-4" />
-            Download
+            <Clapperboard className="size-4" />
+            Edit
             <Badge variant="secondary" className="ml-1 px-1.5 py-0 text-[10px]">
               Soon
             </Badge>
           </Button>
-          <Button variant="outline" size="sm" className="hidden gap-2 md:inline-flex" asChild>
-            <a href={`/play/${id}`} target="_blank" rel="noopener noreferrer">
-              <ExternalLink className="size-4" />
-              Open in New Tab
-            </a>
+          <Button variant="outline" size="sm" className="hidden gap-2 md:inline-flex">
+            <Globe className="size-4" />
+            {game.status === "published" ? "Unpublish" : "Publish"}
           </Button>
+          <ShareButton
+            url={`/game/${id}`}
+            variant="outline"
+            size="sm"
+            className="hidden md:inline-flex"
+          />
 
-          {/* Mobile/Tablet dropdown */}
+          {/* Desktop overflow menu: Download, Delete */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="icon" className="hidden md:inline-flex">
+                <MoreHorizontal className="size-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem disabled>
+                <Download className="size-4" />
+                Download
+                <Badge variant="secondary" className="ml-auto px-1.5 py-0 text-[10px]">
+                  Soon
+                </Badge>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem variant="destructive">
+                <Trash2 className="size-4" />
+                Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          {/* Mobile: all actions in menu */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="icon" className="md:hidden">
@@ -187,6 +211,17 @@ export default async function PlayPage({ params }: PlayPageProps) {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
+              <DropdownMenuItem disabled>
+                <Clapperboard className="size-4" />
+                Edit
+                <Badge variant="secondary" className="ml-auto px-1.5 py-0 text-[10px]">
+                  Soon
+                </Badge>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Globe className="size-4" />
+                {game.status === "published" ? "Unpublish" : "Publish"}
+              </DropdownMenuItem>
               <DropdownMenuItem>
                 <Share2 className="size-4" />
                 Share
@@ -198,11 +233,10 @@ export default async function PlayPage({ params }: PlayPageProps) {
                   Soon
                 </Badge>
               </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <a href={`/play/${id}`} target="_blank" rel="noopener noreferrer">
-                  <ExternalLink className="size-4" />
-                  Open in New Tab
-                </a>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem variant="destructive">
+                <Trash2 className="size-4" />
+                Delete
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
