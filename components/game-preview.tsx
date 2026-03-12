@@ -7,6 +7,7 @@ import {
   Maximize2,
   Download,
   Gamepad2,
+  Globe,
   Sparkles,
   Loader2,
   MoreHorizontal,
@@ -231,6 +232,13 @@ export function GamePreview({ isGenerating, gameGenerated, prompt }: GamePreview
                 <TooltipContent side="bottom">More</TooltipContent>
               </Tooltip>
               <DropdownMenuContent align="end">
+                <DropdownMenuItem disabled>
+                  <Globe className="size-4" />
+                  Publish
+                  <Badge variant="secondary" className="ml-auto px-1.5 py-0 text-[10px]">
+                    Soon
+                  </Badge>
+                </DropdownMenuItem>
                 <DropdownMenuItem disabled>
                   <Download className="size-4" />
                   Download

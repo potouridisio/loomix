@@ -3,8 +3,10 @@
 import {
   Clapperboard,
   Clock,
+  Download,
   Eye,
   Gamepad2,
+  Globe,
   MoreVertical,
   Play,
   Share2,
@@ -165,9 +167,23 @@ export function LibraryGameCard({
                     Soon
                   </Badge>
                 </DropdownMenuItem>
+                <DropdownMenuItem disabled>
+                  <Globe className="size-4" />
+                  Publish
+                  <Badge variant="secondary" className="ml-1 px-1.5 py-0 text-[10px]">
+                    Soon
+                  </Badge>
+                </DropdownMenuItem>
                 <DropdownMenuItem onSelect={handleShare}>
                   <Share2 className="size-4" />
                   Share
+                </DropdownMenuItem>
+                <DropdownMenuItem disabled>
+                  <Download className="size-4" />
+                  Download
+                  <Badge variant="secondary" className="ml-1 px-1.5 py-0 text-[10px]">
+                    Soon
+                  </Badge>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem variant="destructive" onSelect={() => setShowDeleteDialog(true)}>
@@ -266,9 +282,23 @@ export function LibraryGameCard({
                   Soon
                 </Badge>
               </DropdownMenuItem>
+              <DropdownMenuItem disabled>
+                <Globe className="size-4" />
+                Publish
+                <Badge variant="secondary" className="ml-1 px-1.5 py-0 text-[10px]">
+                  Soon
+                </Badge>
+              </DropdownMenuItem>
               <DropdownMenuItem onSelect={handleShare}>
                 <Share2 className="size-4" />
                 Share
+              </DropdownMenuItem>
+              <DropdownMenuItem disabled>
+                <Download className="size-4" />
+                Download
+                <Badge variant="secondary" className="ml-1 px-1.5 py-0 text-[10px]">
+                  Soon
+                </Badge>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem variant="destructive" onSelect={() => setShowDeleteDialog(true)}>
