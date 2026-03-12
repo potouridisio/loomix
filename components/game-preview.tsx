@@ -48,6 +48,7 @@ interface GamePreviewProps {
   isGenerating: boolean;
   gameGenerated: boolean;
   prompt: string;
+  isPublished?: boolean;
 }
 
 const refinementSuggestions = [
@@ -57,12 +58,16 @@ const refinementSuggestions = [
   "Add more obstacles",
 ];
 
-export function GamePreview({ isGenerating, gameGenerated, prompt }: GamePreviewProps) {
+export function GamePreview({ isGenerating, gameGenerated, prompt, isPublished = false }: GamePreviewProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [refinementPrompt, setRefinementPrompt] = useState("");
   const [isRefining, setIsRefining] = useState(false);
   const [isRegenerating, setIsRegenerating] = useState(false);
   const [promptCopied, setPromptCopied] = useState(false);
+
+  const handlePublish = () => {
+    // TODO: Implement actual publish logic
+  };
 
   const handleCopyPrompt = () => {
     navigator.clipboard.writeText(prompt);
@@ -232,12 +237,17 @@ export function GamePreview({ isGenerating, gameGenerated, prompt }: GamePreview
                 <TooltipContent side="bottom">More</TooltipContent>
               </Tooltip>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem disabled>
+                <DropdownMenuItem
+                  disabled={isPublished}
+                  onSelect={!isPublished ? handlePublish : undefined}
+                >
                   <Globe className="size-4" />
                   Publish
-                  <Badge variant="secondary" className="ml-auto px-1.5 py-0 text-[10px]">
-                    Soon
-                  </Badge>
+                  {isPublished && (
+                    <Badge variant="secondary" className="ml-auto px-1.5 py-0 text-[10px]">
+                      Published
+                    </Badge>
+                  )}
                 </DropdownMenuItem>
                 <DropdownMenuItem disabled>
                   <Download className="size-4" />

@@ -77,6 +77,10 @@ export function LibraryGameCard({
     navigator.clipboard.writeText(url);
   };
 
+  const handlePublish = () => {
+    // TODO: Implement actual publish logic
+  };
+
   if (viewMode === "list") {
     return (
       <Card className="overflow-hidden border-border/50 bg-card/50 p-0 transition-colors hover:bg-card">
@@ -167,12 +171,17 @@ export function LibraryGameCard({
                     Soon
                   </Badge>
                 </DropdownMenuItem>
-                <DropdownMenuItem disabled>
+                <DropdownMenuItem
+                  disabled={game.status === "published"}
+                  onSelect={game.status !== "published" ? handlePublish : undefined}
+                >
                   <Globe className="size-4" />
                   Publish
-                  <Badge variant="secondary" className="ml-1 px-1.5 py-0 text-[10px]">
-                    Soon
-                  </Badge>
+                  {game.status === "published" && (
+                    <Badge variant="secondary" className="ml-1 px-1.5 py-0 text-[10px]">
+                      Published
+                    </Badge>
+                  )}
                 </DropdownMenuItem>
                 <DropdownMenuItem onSelect={handleShare}>
                   <Share2 className="size-4" />
@@ -282,12 +291,17 @@ export function LibraryGameCard({
                   Soon
                 </Badge>
               </DropdownMenuItem>
-              <DropdownMenuItem disabled>
+              <DropdownMenuItem
+                disabled={game.status === "published"}
+                onSelect={game.status !== "published" ? handlePublish : undefined}
+              >
                 <Globe className="size-4" />
                 Publish
-                <Badge variant="secondary" className="ml-1 px-1.5 py-0 text-[10px]">
-                  Soon
-                </Badge>
+                {game.status === "published" && (
+                  <Badge variant="secondary" className="ml-1 px-1.5 py-0 text-[10px]">
+                    Published
+                  </Badge>
+                )}
               </DropdownMenuItem>
               <DropdownMenuItem onSelect={handleShare}>
                 <Share2 className="size-4" />
