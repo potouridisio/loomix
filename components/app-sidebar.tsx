@@ -44,7 +44,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { signOut, getCurrentUser } from "@/lib/auth";
+import { signOut, getCurrentUser, getAvatarUrl } from "@/lib/auth";
 import { useAuthDialogStore } from "@/stores/auth-store";
 import { cn } from "@/lib/utils";
 
@@ -227,13 +227,13 @@ export function AppSidebar() {
                     className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
                   >
                     <Avatar className="size-8 rounded-lg">
-                      <AvatarImage src="/placeholder-user.jpg" alt="User" />
+                      <AvatarImage src={getAvatarUrl(user) || ""} alt="User" />
                       <AvatarFallback className="rounded-lg bg-accent text-accent-foreground">
-                        {user.email?.slice(0, 2).toUpperCase() || "JD"}
+                        {user.user_metadata?.name?.slice(0, 2).toUpperCase() || user.email?.slice(0, 2).toUpperCase() || "U"}
                       </AvatarFallback>
                     </Avatar>
                     <div className="grid flex-1 text-left text-sm leading-tight">
-                      <span className="truncate font-semibold">{user.email}</span>
+                      <span className="truncate font-semibold">{user.user_metadata?.name || user.email}</span>
                       <span className="truncate text-xs text-muted-foreground">3 credits</span>
                     </div>
                     <ChevronsUpDown className="ml-auto size-4" />

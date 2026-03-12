@@ -81,3 +81,44 @@ export async function updateUserEmail(email: string) {
 
   return { data, error };
 }
+
+export async function uploadAvatar(file: File) {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: new Error("Not authenticated"), url: null };
+
+  const fileExt = file.name.split(".").pop();
+  const fileName = `${user.id}.${fileExt}`;
+  const filePath = `avatars/${fileName}`;
+
+  const { error: uploadError } = await supabase.storage
+    .from("avatars")
+    .upload(filePath, file, { upsert: true });
+
+  if (uploadError) return { error: uploadError, url: null };
+
+  const { data: { publicUrl } } = supabase.storage
+    .from("avatars")
+    .getPublicUrl(filePath);
+
+  // Update user metadata with avatar URL
+  await supabase.auth.updateUser({
+    data: { avatar_url: publicUrl },
+  });
+
+  return { error: null, url: publicUrl };
+}
+
+export function getAvatarUrl(user: any): string | null {
+  // Check for avatar in user metadata first (uploaded avatar)
+  if (user?.user_metadata?.avatar_url) {
+    return user.user_metadata.avatar_url;
+  }
+  // Fall back to OAuth provider avatar (Google, etc.)
+  if (user?.user_metadata?.picture) {
+    return user.user_metadata.picture;
+  }
+  if (user?.user_metadata?.avatar_url) {
+    return user.user_metadata.avatar_url;
+  }
+  return null;
+}

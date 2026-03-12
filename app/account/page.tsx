@@ -28,7 +28,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { getCurrentUser, updateUserProfile, updateUserEmail, deleteAccount } from "@/lib/auth";
+import { getCurrentUser, updateUserProfile, updateUserEmail, deleteAccount, uploadAvatar, getAvatarUrl } from "@/lib/auth";
 
 export default function AccountPage() {
   const router = useRouter();
@@ -56,6 +56,7 @@ export default function AccountPage() {
           displayName: user.user_metadata?.name || user.email?.split("@")[0] || "",
           email: user.email || "",
         });
+        setAvatarUrl(getAvatarUrl(user));
       } catch {
         setError("Failed to load user data");
       } finally {
@@ -70,11 +71,22 @@ export default function AccountPage() {
     fileInputRef.current?.click();
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      const url = URL.createObjectURL(file);
-      setAvatarUrl(url);
+      // Show preview immediately
+      const previewUrl = URL.createObjectURL(file);
+      setAvatarUrl(previewUrl);
+
+      // Upload to Supabase
+      const { error, url } = await uploadAvatar(file);
+      if (error) {
+        setError("Failed to upload avatar");
+        return;
+      }
+      if (url) {
+        setAvatarUrl(url);
+      }
     }
   };
 
@@ -148,13 +160,15 @@ export default function AccountPage() {
               <div className="flex items-center gap-6">
                 <div className="relative">
                   <Avatar className="size-20">
-                    <AvatarImage src={avatarUrl || "/placeholder-user.jpg"} alt="Profile" />
+                    <AvatarImage src={avatarUrl || ""} alt="Profile" />
                     <AvatarFallback className="bg-primary/10 text-xl text-primary">
                       {profile.displayName
-                        .split(" ")
-                        .map((n) => n[0])
-                        .join("")
-                        .toUpperCase() || "U"}
+                        ? profile.displayName
+                            .split(" ")
+                            .map((n) => n[0])
+                            .join("")
+                            .toUpperCase()
+                        : "U"}
                     </AvatarFallback>
                   </Avatar>
                   <input
