@@ -65,17 +65,25 @@ export function AuthDialog() {
     setLoading(true);
 
     try {
-      closeDialog(); // Close dialog before OAuth redirect
-      const { error: googleError } = await signInWithGoogle();
+      console.log("[v0] Starting Google sign-in...");
+      const { data, error: googleError } = await signInWithGoogle();
+      console.log("[v0] Google sign-in response:", { data, error: googleError });
+      
       if (googleError) {
+        console.log("[v0] Google sign-in error:", googleError);
         setError(googleError.message);
-        // Re-open dialog if there's an error
-        setTimeout(() => {
-          setLoading(false);
-        }, 500);
+        setLoading(false);
+        return;
+      }
+
+      // signInWithOAuth should automatically redirect, but if not, manually redirect
+      if (data?.url) {
+        console.log("[v0] Redirecting to:", data.url);
+        closeDialog();
+        window.location.href = data.url;
       }
     } catch (err) {
-      console.error("[v0] Google sign-in error:", err);
+      console.error("[v0] Google sign-in exception:", err);
       setLoading(false);
     }
   };
