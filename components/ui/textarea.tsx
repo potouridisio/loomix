@@ -79,7 +79,6 @@ function Textarea(
         {...props}
       />
       <ScrollArea
-        style={{ minHeight: `${minHeight}rem`, maxHeight: `${maxHeight * 3}rem` }}
         className={cn(
           "w-full rounded-md border border-input bg-transparent transition-colors focus-within:border-ring aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:bg-input/30 dark:aria-invalid:ring-destructive/40",
           className,
