@@ -194,7 +194,8 @@ export function CreateSidebar({
               placeholder="A platformer where you play as a robot collecting energy cells in a futuristic factory..."
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
-              className="h-32 pr-4 pb-10"
+              className="pr-4 pb-10"
+              rows={5}
             />
             <Button
               type="button"

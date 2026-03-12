@@ -1,113 +1,141 @@
+"use client";
+
 import * as React from "react";
 
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 
-interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
-  rows?: number;
+export interface TextareaProps extends Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement>, "onChange"> {
+  onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
 }
 
-function Textarea(
-  {
-    className,
-    value,
-    defaultValue,
-    onChange,
-    onKeyDown,
-    placeholder,
-    disabled,
-    readOnly,
-    rows = 3,
-    name,
-    form,
-    required,
-    ...props
-  }: TextareaProps,
-  ref: React.Ref<HTMLTextAreaElement>
-) {
-  const editorRef = React.useRef<HTMLDivElement>(null);
-  const hiddenTextareaRef = React.useRef<HTMLTextAreaElement>(null);
-  const [isEmpty, setIsEmpty] = React.useState(!value && !defaultValue);
+const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
+  (
+    {
+      className,
+      value,
+      defaultValue,
+      onChange,
+      onKeyDown,
+      placeholder,
+      disabled,
+      readOnly,
+      rows = 3,
+      name,
+      id,
+      form,
+      required,
+      autoFocus,
+      ...props
+    },
+    ref,
+  ) => {
+    const editorRef = React.useRef<HTMLDivElement>(null);
+    const hiddenRef = React.useRef<HTMLTextAreaElement>(null);
+    const [isEmpty, setIsEmpty] = React.useState(
+      value === undefined ? !defaultValue : !value,
+    );
 
-  const handleInput = React.useCallback(() => {
-    if (editorRef.current && hiddenTextareaRef.current) {
-      const text = editorRef.current.innerText;
-      hiddenTextareaRef.current.value = text === "\n" ? "" : text;
-      setIsEmpty(!text || text === "\n");
-      onChange?.({ target: { value: text === "\n" ? "" : text } } as any);
-    }
-  }, [onChange]);
+    React.useImperativeHandle(ref, () => hiddenRef.current!);
 
-  React.useEffect(() => {
-    if (editorRef.current && value !== undefined) {
-      const currentText = editorRef.current.innerText;
-      if (currentText !== value && !(currentText === "\n" && value === "")) {
-        editorRef.current.innerText = String(value);
-        setIsEmpty(!value);
-        if (hiddenTextareaRef.current) {
-          hiddenTextareaRef.current.value = String(value);
-        }
+    // Sync controlled value into editor
+    React.useEffect(() => {
+      if (value === undefined || editorRef.current === null) return;
+      const str = String(value ?? "");
+      if (editorRef.current.innerText !== str) {
+        editorRef.current.innerText = str;
       }
-    }
-  }, [value]);
+      setIsEmpty(!str);
+    }, [value]);
 
-  React.useEffect(() => {
-    if (editorRef.current && defaultValue !== undefined && !value) {
-      editorRef.current.innerText = String(defaultValue);
-      setIsEmpty(!defaultValue);
-      if (hiddenTextareaRef.current) {
-        hiddenTextareaRef.current.value = String(defaultValue);
+    // Set defaultValue once on mount
+    React.useEffect(() => {
+      if (defaultValue === undefined || editorRef.current === null) return;
+      const str = String(defaultValue);
+      editorRef.current.innerText = str;
+      setIsEmpty(!str);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    const handleInput = React.useCallback(() => {
+      const editor = editorRef.current;
+      const hidden = hiddenRef.current;
+      if (!editor || !hidden) return;
+
+      const raw = editor.innerText;
+      const text = raw === "\n" ? "" : raw;
+
+      hidden.value = text;
+      setIsEmpty(!text);
+
+      if (onChange) {
+        const nativeEvent = new Event("change", { bubbles: true });
+        Object.defineProperty(nativeEvent, "target", { value: hidden });
+        onChange(nativeEvent as unknown as React.ChangeEvent<HTMLTextAreaElement>);
       }
-    }
-  }, [defaultValue, value]);
+    }, [onChange]);
 
-  React.useImperativeHandle(ref, () => hiddenTextareaRef.current as HTMLTextAreaElement);
+    // 1.5rem per row + 1rem top/bottom padding
+    const heightRem = rows * 1.5 + 1;
 
-  const lineHeightRem = 1.5;
-  const minHeight = rows * lineHeightRem;
-  const maxHeight = rows * lineHeightRem + 0.5; // +0.5 for padding
-
-  return (
-    <>
-      <textarea
-        ref={hiddenTextareaRef}
-        name={name}
-        form={form}
-        required={required}
-        defaultValue={defaultValue}
-        className="hidden"
-        {...props}
-      />
-      <ScrollArea
-        className={cn(
-          "w-full rounded-md border border-input bg-transparent transition-colors focus-within:border-ring aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:bg-input/30 dark:aria-invalid:ring-destructive/40",
-          className,
-        )}
-      >
-        <div className="relative">
-          {isEmpty && placeholder && (
-            <span className="pointer-events-none absolute left-3 top-2 text-sm text-muted-foreground">
-              {placeholder}
-            </span>
+    return (
+      <>
+        <textarea
+          ref={hiddenRef}
+          name={name}
+          form={form}
+          required={required}
+          defaultValue={defaultValue}
+          value={value}
+          readOnly
+          tabIndex={-1}
+          aria-hidden
+          className="sr-only"
+          {...props}
+        />
+        <ScrollArea
+          style={{ height: `${heightRem}rem` }}
+          className={cn(
+            "w-full rounded-md border border-input bg-transparent transition-colors",
+            "focus-within:border-ring",
+            "aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40",
+            "dark:bg-input/30",
+            disabled && "cursor-not-allowed opacity-50",
+            className,
           )}
-          <div
-            ref={editorRef}
-            data-slot="textarea"
-            contentEditable={!disabled && !readOnly}
-            onInput={handleInput}
-            onKeyDown={onKeyDown}
-            style={{ minHeight: `${minHeight}rem` }}
-            className={cn(
-              "w-full whitespace-pre-wrap break-words bg-transparent px-3 py-2 text-sm outline-none",
-              disabled && "cursor-not-allowed opacity-50",
+        >
+          <div className="relative min-h-full">
+            {isEmpty && placeholder && (
+              <span
+                aria-hidden
+                className="pointer-events-none absolute left-3 top-2 text-sm text-muted-foreground select-none"
+              >
+                {placeholder}
+              </span>
             )}
-          />
-        </div>
-      </ScrollArea>
-    </>
-  );
-}
+            <div
+              ref={editorRef}
+              id={id}
+              role="textbox"
+              aria-multiline="true"
+              aria-label={placeholder}
+              aria-disabled={disabled}
+              aria-readonly={readOnly}
+              contentEditable={!disabled && !readOnly ? "true" : "false"}
+              suppressContentEditableWarning
+              autoFocus={autoFocus}
+              onInput={handleInput}
+              onKeyDown={onKeyDown}
+              style={{ minHeight: `${heightRem}rem` }}
+              className="w-full whitespace-pre-wrap break-words bg-transparent px-3 py-2 text-sm outline-none"
+            />
+          </div>
+        </ScrollArea>
+      </>
+    );
+  },
+);
 
-const ForwardedTextarea = React.forwardRef(Textarea);
+Textarea.displayName = "Textarea";
 
-export { ForwardedTextarea as Textarea };
+export { Textarea };

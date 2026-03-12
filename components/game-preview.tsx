@@ -379,7 +379,8 @@ export function GamePreview({ isGenerating, gameGenerated, prompt, isPublished =
               placeholder="Make enemies faster, add power-ups, change colors..."
               value={refinementPrompt}
               onChange={(e) => setRefinementPrompt(e.target.value)}
-              className="h-24 resize-none pr-4 pb-10"
+              className="pr-4 pb-10"
+              rows={4}
               disabled={isRefining}
             />
             <Tooltip>
