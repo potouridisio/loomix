@@ -43,14 +43,12 @@ export async function getCurrentUser() {
 }
 
 export async function signInWithGoogle() {
-  console.log("[v0] Calling supabase.auth.signInWithOAuth...");
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: {
       redirectTo: `${typeof window !== "undefined" ? window.location.origin : ""}/auth/callback`,
     },
   });
-  console.log("[v0] signInWithOAuth result:", { data, error });
 
   return { data, error };
 }
