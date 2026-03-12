@@ -15,8 +15,8 @@ import {
   SidebarIcon,
 } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 import { Logo } from "@/components/logo";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -44,7 +44,8 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { useAuth } from "@/lib/auth-context";
+import { signOut, getCurrentUser } from "@/lib/auth";
+import { useAuthDialogStore } from "@/lib/stores/auth-store";
 import { cn } from "@/lib/utils";
 
 const mainNavItems = [
@@ -63,18 +64,34 @@ const mainNavItems = [
 
 export function AppSidebar() {
   const pathname = usePathname();
-  const { isLoggedIn, user, logout, setShowAuthDialog, setAuthMode, setRedirectTo } = useAuth();
+  const router = useRouter();
   const { toggleSidebar, state } = useSidebar();
   const isCollapsed = state === "collapsed";
   const [isOpen, setOpen] = useState(false);
+  const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const { openDialog } = useAuthDialogStore();
+
+  useEffect(() => {
+    const checkUser = async () => {
+      const currentUser = await getCurrentUser();
+      setUser(currentUser);
+      setLoading(false);
+    };
+    checkUser();
+  }, []);
 
   const handleNavClick = (item: (typeof mainNavItems)[0], e: React.MouseEvent) => {
-    if (item.requiresAuth && !isLoggedIn) {
+    if (item.requiresAuth && !user) {
       e.preventDefault();
-      setRedirectTo(item.url);
-      setAuthMode("login");
-      setShowAuthDialog(true);
+      openDialog("login", item.url);
     }
+  };
+
+  const handleLogout = async () => {
+    await signOut();
+    setUser(null);
+    router.push("/");
   };
 
   return (
@@ -166,7 +183,7 @@ export function AppSidebar() {
         </SidebarGroup>
 
         {/* Subscribe Card - Only show when logged in */}
-        {isLoggedIn && (
+        {user && (
           <SidebarGroup className="mt-auto group-data-[collapsible=icon]:hidden">
             <Card className="mx-2 border-primary/30 bg-primary/10 p-0 shadow-[0_0_30px_hsl(var(--primary)/0.08)]">
               <CardContent className="p-4">
@@ -202,7 +219,7 @@ export function AppSidebar() {
       <SidebarFooter className="p-2">
         <SidebarMenu>
           <SidebarMenuItem>
-            {isLoggedIn ? (
+            {!loading && user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <SidebarMenuButton
@@ -212,11 +229,11 @@ export function AppSidebar() {
                     <Avatar className="size-8 rounded-lg">
                       <AvatarImage src="/placeholder-user.jpg" alt="User" />
                       <AvatarFallback className="rounded-lg bg-accent text-accent-foreground">
-                        {user?.initials || "JD"}
+                        {user.email?.slice(0, 2).toUpperCase() || "JD"}
                       </AvatarFallback>
                     </Avatar>
                     <div className="grid flex-1 text-left text-sm leading-tight">
-                      <span className="truncate font-semibold">{user?.name || "John Doe"}</span>
+                      <span className="truncate font-semibold">{user.email}</span>
                       <span className="truncate text-xs text-muted-foreground">3 credits</span>
                     </div>
                     <ChevronsUpDown className="ml-auto size-4" />
@@ -241,7 +258,7 @@ export function AppSidebar() {
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem className="text-muted-foreground" onSelect={logout}>
+                  <DropdownMenuItem className="text-muted-foreground" onSelect={handleLogout}>
                     <LogOut className="size-4" />
                     Log out
                   </DropdownMenuItem>
@@ -251,8 +268,7 @@ export function AppSidebar() {
               <SidebarMenuButton
                 size="lg"
                 onClick={() => {
-                  setAuthMode("login");
-                  setShowAuthDialog(true);
+                  openDialog("login");
                 }}
               >
                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-accent">

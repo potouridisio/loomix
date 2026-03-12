@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { Logo } from "@/components/logo";
@@ -13,28 +14,68 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useAuth } from "@/lib/auth-context";
+import { signInWithEmail, signUpWithEmail, signInWithGoogle } from "@/lib/auth";
+import { useAuthDialogStore } from "@/lib/stores/auth-store";
 
 export function AuthDialog() {
-  const { showAuthDialog, setShowAuthDialog, authMode, setAuthMode, login, signup } = useAuth();
+  const router = useRouter();
+  const { isOpen, mode, redirectTo, closeDialog, setMode, setRedirectTo } = useAuthDialogStore();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (authMode === "login") {
-      login(email, password);
-    } else {
-      signup(name, email, password);
+    setError(null);
+    setLoading(true);
+
+    try {
+      if (mode === "login") {
+        const { error: signInError } = await signInWithEmail(email, password);
+        if (signInError) {
+          setError(signInError.message);
+          return;
+        }
+      } else {
+        const { error: signUpError } = await signUpWithEmail(email, password, name);
+        if (signUpError) {
+          setError(signUpError.message);
+          return;
+        }
+      }
+
+      setName("");
+      setEmail("");
+      setPassword("");
+      closeDialog();
+
+      if (redirectTo) {
+        router.push(redirectTo);
+        setRedirectTo(null);
+      }
+    } finally {
+      setLoading(false);
     }
-    setName("");
-    setEmail("");
-    setPassword("");
+  };
+
+  const handleGoogleSignIn = async () => {
+    setError(null);
+    setLoading(true);
+
+    try {
+      const { error: googleError } = await signInWithGoogle();
+      if (googleError) {
+        setError(googleError.message);
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <Dialog open={showAuthDialog} onOpenChange={setShowAuthDialog}>
+    <Dialog open={isOpen} onOpenChange={closeDialog}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader className="items-center text-center">
           <div className="mb-4 flex justify-center">
@@ -43,21 +84,28 @@ export function AuthDialog() {
             </div>
           </div>
           <DialogTitle className="text-center text-xl">
-            {authMode === "login" ? "Welcome back" : "Create an account"}
+            {mode === "login" ? "Welcome back" : "Create an account"}
           </DialogTitle>
           <DialogDescription className="text-center">
-            {authMode === "login"
+            {mode === "login"
               ? "Sign in to your Loomix account to continue"
               : "Sign up for Loomix to start creating games"}
           </DialogDescription>
         </DialogHeader>
+
+        {error && (
+          <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
+            {error}
+          </div>
+        )}
 
         <div className="pt-4">
           <Button
             type="button"
             variant="outline"
             className="w-full gap-2"
-            onClick={() => login("google@example.com", "google")}
+            disabled={loading}
+            onClick={handleGoogleSignIn}
           >
             <svg className="size-4" viewBox="0 0 24 24">
               <path
@@ -91,7 +139,7 @@ export function AuthDialog() {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {authMode === "signup" && (
+          {mode === "signup" && (
             <div className="space-y-2">
               <Label htmlFor="name">Name</Label>
               <Input
@@ -100,6 +148,7 @@ export function AuthDialog() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
+                disabled={loading}
               />
             </div>
           )}
@@ -112,6 +161,7 @@ export function AuthDialog() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              disabled={loading}
             />
           </div>
           <div className="space-y-2">
@@ -123,22 +173,23 @@ export function AuthDialog() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              disabled={loading}
             />
           </div>
 
-          <Button type="submit" className="w-full">
-            {authMode === "login" ? "Sign In" : "Create Account"}
+          <Button type="submit" className="w-full" disabled={loading}>
+            {loading ? "Loading..." : mode === "login" ? "Sign In" : "Create Account"}
           </Button>
         </form>
 
         <div className="pt-2 text-center text-sm text-muted-foreground">
-          {authMode === "login" ? (
+          {mode === "login" ? (
             <>
               Don&apos;t have an account?{" "}
               <button
                 type="button"
                 className="text-primary hover:underline"
-                onClick={() => setAuthMode("signup")}
+                onClick={() => setMode("signup")}
               >
                 Sign up
               </button>
@@ -149,7 +200,7 @@ export function AuthDialog() {
               <button
                 type="button"
                 className="text-primary hover:underline"
-                onClick={() => setAuthMode("login")}
+                onClick={() => setMode("login")}
               >
                 Sign in
               </button>

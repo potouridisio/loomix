@@ -10,7 +10,6 @@ import { AuthDialog } from "@/components/auth-dialog";
 import { MobileHeader } from "@/components/mobile-header";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
-import { AuthProvider } from "@/lib/auth-context";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -44,18 +43,16 @@ export default async function RootLayout({
   return (
     <html lang="en" className="dark">
       <body className={`${inter.variable} ${geistMono.variable}  font-mono antialiased`}>
-        <AuthProvider>
-          <SidebarProvider defaultOpen={defaultOpen}>
-            <AppSidebar />
-            <SidebarInset>
-              <MobileHeader />
-              <ScrollArea className="h-dvh">
-                <div className="min-h-full">{children}</div>
-              </ScrollArea>
-            </SidebarInset>
-          </SidebarProvider>
-          <AuthDialog />
-        </AuthProvider>
+        <SidebarProvider defaultOpen={defaultOpen}>
+          <AppSidebar />
+          <SidebarInset>
+            <MobileHeader />
+            <ScrollArea className="h-dvh">
+              <div className="min-h-full">{children}</div>
+            </ScrollArea>
+          </SidebarInset>
+        </SidebarProvider>
+        <AuthDialog />
         <Analytics />
       </body>
     </html>
