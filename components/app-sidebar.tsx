@@ -63,7 +63,7 @@ const mainNavItems = [
 
 export function AppSidebar() {
   const pathname = usePathname();
-  const { isLoggedIn, user, logout, setShowAuthDialog, setAuthMode, setRedirectTo } = useAuth();
+  const { isLoggedIn, userDisplayInfo, logout, setShowAuthDialog, setAuthMode, setRedirectTo } = useAuth();
   const { toggleSidebar, state } = useSidebar();
   const isCollapsed = state === "collapsed";
   const [isOpen, setOpen] = useState(false);
@@ -212,11 +212,11 @@ export function AppSidebar() {
                     <Avatar className="size-8 rounded-lg">
                       <AvatarImage src="/placeholder-user.jpg" alt="User" />
                       <AvatarFallback className="rounded-lg bg-accent text-accent-foreground">
-                        {user?.initials || "JD"}
+                        {userDisplayInfo?.initials || "JD"}
                       </AvatarFallback>
                     </Avatar>
                     <div className="grid flex-1 text-left text-sm leading-tight">
-                      <span className="truncate font-semibold">{user?.name || "John Doe"}</span>
+                      <span className="truncate font-semibold">{userDisplayInfo?.name || "User"}</span>
                       <span className="truncate text-xs text-muted-foreground">3 credits</span>
                     </div>
                     <ChevronsUpDown className="ml-auto size-4" />
