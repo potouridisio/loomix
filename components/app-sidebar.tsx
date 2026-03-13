@@ -105,10 +105,7 @@ export function AppSidebar() {
                       asChild
                     >
                       <div>
-                        <Logo
-                          size="md"
-                          className="group-data-[collapsible=icon]:group-hover/item:hidden"
-                        />
+                        <Logo className="size-5 group-data-[collapsible=icon]:group-hover/item:hidden" />
                         <SidebarIcon className="hidden size-4 group-data-[collapsible=icon]:group-hover/item:block" />
                       </div>
                     </Button>
@@ -116,7 +113,7 @@ export function AppSidebar() {
                   <TooltipContent side="right">Open sidebar</TooltipContent>
                 </Tooltip>
                 <div className="grid flex-1 text-left leading-tight">
-                  <span className="text-sm font-bold">Loomix</span>
+                  <span className="text-sm font-bold">Gamepop</span>
                   <span className="text-xs text-muted-foreground">Free</span>
                 </div>
               </Link>

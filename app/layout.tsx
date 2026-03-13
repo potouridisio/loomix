@@ -23,9 +23,15 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Loomix - AI Game Generator",
-  description: "Create playable 2D games with AI. The Suno for games.",
-  generator: "v0.app",
+  title: "Gamepop – Turn Prompts Into Playable Games",
+  description:
+    "Gamepop is an AI-powered platform that turns prompts into playable 2D games instantly. Create, play, and share games from text.",
+  openGraph: {
+    title: "Gamepop – Turn Prompts Into Playable Games",
+    description: "Create playable 2D games from prompts using AI.",
+    url: "https://gamepop.dev",
+    siteName: "Gamepop",
+  },
 };
 
 export const viewport: Viewport = {

@@ -35,7 +35,7 @@ export function GameRatingDialog({ open, onOpenChange }: GameRatingDialogProps) 
       <DialogContent className="sm:max-w-sm">
         <DialogHeader>
           <DialogTitle>Rate this game</DialogTitle>
-          <DialogDescription>Your feedback helps Loomix surface better games.</DialogDescription>
+          <DialogDescription>Your feedback helps Gamepop surface better games.</DialogDescription>
         </DialogHeader>
         <div className="flex justify-center py-4">
           <div className="flex items-center gap-1">

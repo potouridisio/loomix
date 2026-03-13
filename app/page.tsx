@@ -153,15 +153,14 @@ export default function HomePage() {
               </div>
             </div>
             <h2 className="relative mb-6 text-4xl font-bold tracking-tight text-balance text-[#f8f8f8] md:text-5xl lg:text-6xl">
-              Create playable{" "}
+              Turn prompts into playable{" "}
               <span className="text-[#a1a8ff] [text-shadow:2px_2px_0_rgba(115,125,255,0.9),4px_4px_0_rgba(115,125,255,0.28),0_0_8px_rgba(115,125,255,0.12)]">
                 {" "}
                 games
-              </span>{" "}
-              with AI
+              </span>
             </h2>
             <p className="relative mb-8 text-lg text-pretty text-muted-foreground">
-              Describe your game idea and watch it come to life. No coding required.
+              Describe your game idea and instantly play it. No coding required.
             </p>
             <div className="relative">
               <GamePromptInput />

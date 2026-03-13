@@ -39,7 +39,7 @@ export function AuthDialog() {
         <DialogHeader className="items-center text-center">
           <div className="mb-4 flex justify-center">
             <div className="flex size-12 items-center justify-center rounded-xl bg-primary text-primary-foreground">
-              <Logo size="lg" />
+              <Logo className="size-7.5" />
             </div>
           </div>
           <DialogTitle className="text-center text-xl">
@@ -47,8 +47,8 @@ export function AuthDialog() {
           </DialogTitle>
           <DialogDescription className="text-center">
             {authMode === "login"
-              ? "Sign in to your Loomix account to continue"
-              : "Sign up for Loomix to start creating games"}
+              ? "Sign in to your Gamepop account to continue"
+              : "Sign up for Gamepop to start creating games"}
           </DialogDescription>
         </DialogHeader>
 

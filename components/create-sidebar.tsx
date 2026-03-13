@@ -390,7 +390,7 @@ export function CreateSidebar({
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Crown className="size-5 text-primary" />
-              Upgrade to Loomix Pro
+              Upgrade to Gamepop Pro
             </DialogTitle>
             <DialogDescription>
               Unlock all features and start creating amazing games.
@@ -399,7 +399,7 @@ export function CreateSidebar({
           <div className="space-y-4 py-4">
             <div className="space-y-3 rounded-lg border border-primary/50 bg-primary/5 p-4">
               <div className="flex items-center justify-between">
-                <span className="font-semibold">Loomix Pro</span>
+                <span className="font-semibold">Gamepop Pro</span>
                 <div className="text-right">
                   <span className="text-2xl font-bold">$19</span>
                   <span className="text-muted-foreground">/month</span>

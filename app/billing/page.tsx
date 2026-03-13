@@ -42,7 +42,7 @@ const plans = {
     name: "Free",
     price: "$0",
     period: "forever",
-    description: "Perfect for trying out Loomix",
+    description: "Perfect for trying out Gamepop",
     features: [
       "5 generation credits / month",
       "Core templates",
@@ -109,7 +109,7 @@ export default function BillingPage() {
             </h2>
             <p className="text-muted-foreground">
               {currentPlan === "free"
-                ? "Unlock unlimited game creation with Loomix Pro"
+                ? "Unlock unlimited game creation with Gamepop Pro"
                 : "You are currently on the Pro plan"}
             </p>
           </div>
@@ -240,7 +240,7 @@ export default function BillingPage() {
                         <Crown className="size-6 text-primary" />
                       </div>
                       <div>
-                        <CardTitle className="text-xl">Loomix Pro</CardTitle>
+                        <CardTitle className="text-xl">Gamepop Pro</CardTitle>
                         <CardDescription>Your subscription is active</CardDescription>
                       </div>
                     </div>
@@ -371,13 +371,13 @@ export default function BillingPage() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Manage Subscription</DialogTitle>
-            <DialogDescription>Review and manage your Loomix Pro subscription.</DialogDescription>
+            <DialogDescription>Review and manage your Gamepop Pro subscription.</DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="flex items-center justify-between rounded-lg border border-border p-4">
               <div>
                 <p className="font-medium">Current Plan</p>
-                <p className="text-sm text-muted-foreground">Loomix Pro Monthly</p>
+                <p className="text-sm text-muted-foreground">Gamepop Pro Monthly</p>
               </div>
               <Badge>Active</Badge>
             </div>
@@ -415,7 +415,7 @@ export default function BillingPage() {
           <AlertDialogHeader>
             <AlertDialogTitle>Cancel your subscription?</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to cancel your Loomix Pro subscription? You will lose access to
+              Are you sure you want to cancel your Gamepop Pro subscription? You will lose access to
               all Pro features at the end of your current billing period.
             </AlertDialogDescription>
           </AlertDialogHeader>

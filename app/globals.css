@@ -3,7 +3,7 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* Loomix - Vibrant electric indigo gaming theme */
+/* Gamepop - Vibrant electric indigo gaming theme */
 :root {
   --background: oklch(0.13 0.02 275);
   --foreground: oklch(0.98 0 0);

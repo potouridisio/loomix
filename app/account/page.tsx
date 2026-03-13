@@ -269,7 +269,7 @@ export default function AccountPage() {
             <CardHeader>
               <CardTitle>Appearance</CardTitle>
               <CardDescription>
-                Customize how Loomix looks for you
+                Customize how Gamepop looks for you
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
