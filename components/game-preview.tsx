@@ -7,14 +7,11 @@ import {
   Maximize2,
   Download,
   Gamepad2,
-  Globe,
-  GlobeLock,
   Sparkles,
   Loader2,
   MoreHorizontal,
   RefreshCw,
   Clapperboard,
-  Share2,
   Trash2,
   Send,
   Copy,
@@ -40,7 +37,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Textarea } from "@/components/ui/textarea";
@@ -51,7 +47,6 @@ interface GamePreviewProps {
   isGenerating: boolean;
   gameGenerated: boolean;
   prompt: string;
-  isPublished?: boolean;
 }
 
 const refinementSuggestions = [
@@ -61,16 +56,12 @@ const refinementSuggestions = [
   "Add more obstacles",
 ];
 
-export function GamePreview({ isGenerating, gameGenerated, prompt, isPublished = false }: GamePreviewProps) {
+export function GamePreview({ isGenerating, gameGenerated, prompt }: GamePreviewProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [refinementPrompt, setRefinementPrompt] = useState("");
   const [isRefining, setIsRefining] = useState(false);
   const [isRegenerating, setIsRegenerating] = useState(false);
   const [promptCopied, setPromptCopied] = useState(false);
-
-  const handlePublish = () => {
-    // TODO: Implement actual publish logic
-  };
 
   const handleCopyPrompt = () => {
     navigator.clipboard.writeText(prompt);
@@ -185,35 +176,54 @@ export function GamePreview({ isGenerating, gameGenerated, prompt, isPublished =
             </DialogContent>
           </Dialog>
           <div className="flex shrink-0 items-center gap-1">
-            {/* Desktop visible: Edit, Publish/Unpublish, Share */}
-            <Button variant="ghost" size="sm" className="hidden gap-2 sm:inline-flex" disabled>
-              <Clapperboard className="size-4" />
-              Edit
-              <Badge variant="secondary" className="px-1.5 py-0 text-[10px]">
-                Soon
-              </Badge>
-            </Button>
-            <Button variant="ghost" size="sm" className="hidden gap-2 sm:inline-flex" onClick={handlePublish}>
-              {isPublished ? (
-                <GlobeLock className="size-4" />
-              ) : (
-                <Globe className="size-4" />
-              )}
-              {isPublished ? "Unpublish" : "Publish"}
-            </Button>
+            {/* Desktop Share */}
             <ShareButton
               url={`${typeof window !== "undefined" ? window.location.origin : ""}/game/preview`}
               variant="ghost"
               size="sm"
               className="hidden sm:inline-flex"
             />
-
-            {/* Desktop overflow menu: Download, Delete */}
+            {/* Mobile Share with Tooltip */}
+            <div className="sm:hidden">
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant="ghost" size="icon-sm" asChild>
+                    <ShareButton
+                      url={`${typeof window !== "undefined" ? window.location.origin : ""}/game/preview`}
+                      variant="ghost"
+                      size="icon-sm"
+                      showLabel={false}
+                    />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom">Share</TooltipContent>
+              </Tooltip>
+            </div>
+            {/* Desktop Studio */}
+            <Button variant="ghost" size="sm" className="hidden gap-2 sm:inline-flex" disabled>
+              <Clapperboard className="size-4" />
+              Open in Studio
+              <Badge variant="secondary" className="px-1.5 py-0 text-[10px]">
+                Soon
+              </Badge>
+            </Button>
+            {/* Mobile Studio with Tooltip */}
+            <div className="sm:hidden">
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant="ghost" size="icon-sm" disabled>
+                    <Clapperboard className="size-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom">Open in Studio (Soon)</TooltipContent>
+              </Tooltip>
+            </div>
+            {/* More Menu */}
             <DropdownMenu>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon-sm" className="hidden sm:inline-flex">
+                    <Button variant="ghost" size="icon-sm">
                       <MoreHorizontal className="size-4" />
                     </Button>
                   </DropdownMenuTrigger>
@@ -228,55 +238,7 @@ export function GamePreview({ isGenerating, gameGenerated, prompt, isPublished =
                     Soon
                   </Badge>
                 </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem variant="destructive">
-                  <Trash2 className="size-4" />
-                  Delete
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            {/* Mobile: all actions in menu */}
-            <DropdownMenu>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon-sm" className="sm:hidden">
-                      <MoreHorizontal className="size-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                </TooltipTrigger>
-                <TooltipContent side="bottom">More</TooltipContent>
-              </Tooltip>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem disabled>
-                  <Clapperboard className="size-4" />
-                  Edit
-                  <Badge variant="secondary" className="ml-auto px-1.5 py-0 text-[10px]">
-                    Soon
-                  </Badge>
-                </DropdownMenuItem>
-                <DropdownMenuItem onSelect={handlePublish}>
-                  {isPublished ? (
-                    <GlobeLock className="size-4" />
-                  ) : (
-                    <Globe className="size-4" />
-                  )}
-                  {isPublished ? "Unpublish" : "Publish"}
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Share2 className="size-4" />
-                  Share
-                </DropdownMenuItem>
-                <DropdownMenuItem disabled>
-                  <Download className="size-4" />
-                  Download
-                  <Badge variant="secondary" className="ml-auto px-1.5 py-0 text-[10px]">
-                    Soon
-                  </Badge>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem variant="destructive">
+                <DropdownMenuItem className="text-destructive focus:text-destructive">
                   <Trash2 className="size-4" />
                   Delete
                 </DropdownMenuItem>
@@ -379,8 +341,7 @@ export function GamePreview({ isGenerating, gameGenerated, prompt, isPublished =
               placeholder="Make enemies faster, add power-ups, change colors..."
               value={refinementPrompt}
               onChange={(e) => setRefinementPrompt(e.target.value)}
-              className="pr-4 pb-10"
-              rows={4}
+              className="h-24 resize-none pr-4 pb-10"
               disabled={isRefining}
             />
             <Tooltip>

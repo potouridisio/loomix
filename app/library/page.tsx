@@ -110,7 +110,7 @@ export default function LibraryPage() {
       {/* App Grid Background */}
       <AppGridBackground className="opacity-[0.04]!" />
 
-      <div className="flex-1 p-4 pt-16 pb-24 sm:p-6 sm:pb-8 md:pt-6 md:pb-6">
+      <div className="flex-1 p-4 pt-16 pb-8 sm:p-6 md:pt-6 md:pb-6">
         {/* Header Actions */}
         <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>

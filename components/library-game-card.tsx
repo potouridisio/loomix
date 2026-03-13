@@ -3,11 +3,8 @@
 import {
   Clapperboard,
   Clock,
-  Download,
   Eye,
   Gamepad2,
-  Globe,
-  GlobeLock,
   MoreVertical,
   Play,
   Share2,
@@ -76,10 +73,6 @@ export function LibraryGameCard({
   const handleShare = () => {
     const url = `${window.location.origin}/game/${game.id}`;
     navigator.clipboard.writeText(url);
-  };
-
-  const handlePublish = () => {
-    // TODO: Implement actual publish logic
   };
 
   if (viewMode === "list") {
@@ -172,24 +165,9 @@ export function LibraryGameCard({
                     Soon
                   </Badge>
                 </DropdownMenuItem>
-                <DropdownMenuItem onSelect={handlePublish}>
-                  {game.status === "published" ? (
-                    <GlobeLock className="size-4" />
-                  ) : (
-                    <Globe className="size-4" />
-                  )}
-                  {game.status === "published" ? "Unpublish" : "Publish"}
-                </DropdownMenuItem>
                 <DropdownMenuItem onSelect={handleShare}>
                   <Share2 className="size-4" />
                   Share
-                </DropdownMenuItem>
-                <DropdownMenuItem disabled>
-                  <Download className="size-4" />
-                  Download
-                  <Badge variant="secondary" className="ml-1 px-1.5 py-0 text-[10px]">
-                    Soon
-                  </Badge>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem variant="destructive" onSelect={() => setShowDeleteDialog(true)}>
@@ -288,24 +266,9 @@ export function LibraryGameCard({
                   Soon
                 </Badge>
               </DropdownMenuItem>
-              <DropdownMenuItem onSelect={handlePublish}>
-                {game.status === "published" ? (
-                  <GlobeLock className="size-4" />
-                ) : (
-                  <Globe className="size-4" />
-                )}
-                {game.status === "published" ? "Unpublish" : "Publish"}
-              </DropdownMenuItem>
               <DropdownMenuItem onSelect={handleShare}>
                 <Share2 className="size-4" />
                 Share
-              </DropdownMenuItem>
-              <DropdownMenuItem disabled>
-                <Download className="size-4" />
-                Download
-                <Badge variant="secondary" className="ml-1 px-1.5 py-0 text-[10px]">
-                  Soon
-                </Badge>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem variant="destructive" onSelect={() => setShowDeleteDialog(true)}>
